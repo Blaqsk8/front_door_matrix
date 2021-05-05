@@ -13,12 +13,13 @@ sensor:
     name: "Humidity"
     state_topic: "door/humidty"
     unit_of_measurement: '%'
-    value_template: "{{ value_json.relative_humity }}"
+    value_template: "{{ value_json.humidity }}"
  
 binary_sensor:
   - platform: mqtt
     name: Movment
     state_topic: "door/pir"
+    value_template: "{{ value_json.pir }}"
     payload_on: "1"
     payload_off: "0"
  
@@ -27,6 +28,7 @@ switch:
     name: Door
     command_topic: "door/switch1"
     state_topic: "door/switch1"
+    value_template: "{{ value_json.door }}"
     payload_on: "1"
     payload_off: "0"
     state_on: "1"
