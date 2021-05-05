@@ -46,13 +46,10 @@ door_sensor.pull = Pull.UP
  
 PUBLISH_DELAY = 60
 mqtt_topic = "test/topic"
-mqtt_temperature = "pyportal/temperature"
-mqtt_humidity = "pyportal/lux"
+mqtt_temperature = "door/temperature"
+mqtt_humidity = "pyportal/humidity"
 mqtt_PIR = "pyportal/pir"
-mqtt_button1 = "pyportal/button1"
-mqtt_button2 = "pyportal/button2"
-mqtt_feed1 = "pyportal/feed1"
-mqtt_feed2 = "pyportal/feed2"
+mqtt_switch = "door/switch1"
 
 # ------------- MQTT Functions ------------- #
  
