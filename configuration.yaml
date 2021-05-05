@@ -11,7 +11,7 @@ sensor:
   - platform: mqtt
     name: "Humidity"
     state_topic: "door/humidty"
-    unit_of_measurement: 'Lux'
+    unit_of_measurement: 'Relative Humidity'
  
 binary_sensor:
   - platform: mqtt
