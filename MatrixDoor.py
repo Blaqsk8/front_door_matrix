@@ -42,13 +42,17 @@ door_sensor = DigitalInOut(board.A0)
 door_sensor.direction = Direction.INPUT
 door_sensor.pull = Pull.UP
 
+pir_sensor = DigitalInOut(board.A1)
+pir_sensor.direction = Direction.INPUT
+pir_sensor.pull = Pull.UP
+
 # ------------- MQTT Topic Setup ------------- #
- 
+
 PUBLISH_DELAY = 60
 mqtt_topic = "test/topic"
 mqtt_temperature = "door/temperature"
-mqtt_humidity = "pyportal/humidity"
-mqtt_PIR = "pyportal/pir"
+mqtt_humidity = "door/humidity"
+mqtt_PIR = "door/pir"
 mqtt_switch = "door/switch1"
 
 # ------------- MQTT Functions ------------- #
@@ -145,7 +149,8 @@ while True:
     output = {
         "temperature": temp_f,
         "humidity": humidity,
-        "deep": door_sensor,
+        "door": door_sensor,
+        "pir": pir_sensor,
     }
     print("Publishing to %s" % MQTT_TOPIC)
     mqtt_client.publish(MQTT_TOPIC, json.dumps(output))
