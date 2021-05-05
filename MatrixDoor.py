@@ -47,7 +47,7 @@ pir_sensor.direction = Direction.INPUT
 pir_sensor.pull = Pull.UP
 
 # ------------- MQTT Topic Setup ------------- #
-
+# Group Feed is set to Door group
 PUBLISH_DELAY = 60
 mqtt_topic = "test/topic"
 mqtt_temperature = "door/temperature"
@@ -79,28 +79,6 @@ def subscribe(client, userdata, topic, granted_qos):
 def publish(client, userdata, topic, pid):
     # This method is called when the client publishes data to a feed.
     print("Published to {0} with PID {1}".format(topic, pid))
- 
- 
-def message(client, topic, message):
-    """Method callled when a client's subscribed feed has a new
-    value.
-    :param str topic: The topic of the feed with a new value.
-    :param str message: The new value
-    """
-    print("New message on topic {0}: {1}".format(topic, message))
-    if topic == "pyportal/feed1":
-        feed1_label.text = "Next Bus: {}".format(message)
-    if topic == "pyportal/feed2":
-        feed2_label.text = "Weather: \n    {}".format(message)
-    if topic == "pyportal/button1":
-        if message == "1":
-            buttons[0].label = "ON"
-            buttons[0].selected = False
-            print("Button 1 ON")
-        else:
-            buttons[0].label = "OFF"
-            buttons[0].selected = True
-            print("Button 1 OFF")
 
 # ------------- Network Connection ------------- #
  
@@ -144,17 +122,14 @@ while True:
     temp_f = (temp_sensor.temperature * 1.8) + 32
     humidity = temp_sensor.relative_humidty)
     print(temp_f)
+    client.publish(mqtt_temperature, temp_f)
+    print(humidity)
+    client.publish(mqtt_humidity, humidity)
     print(door_sensor)
-    
-    output = {
-        "temperature": temp_f,
-        "humidity": humidity,
-        "door": door_sensor,
-        "pir": pir_sensor,
-    }
-    print("Publishing to %s" % MQTT_TOPIC)
-    mqtt_client.publish(MQTT_TOPIC, json.dumps(output))
-    
+    client.publish(mqtt_door, door_sensor)
+    print(pir_sensor)
+    client.publish(mqtt_pir, pir_sensor)
+
     last_update = time.monotonic()
     while time.monotonic() < last_update + PUBLISH_DELAY:
-        mqtt_client.loop()
+        client.loop()
