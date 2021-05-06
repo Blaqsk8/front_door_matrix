@@ -26,14 +26,15 @@ matrixportal = Matrixportal(status_neopixel=board.NEOPIXEL, debug=True)
 # Create a new label with the color and text selected
 matrixportal.add_text(
     text_font=terminalio.FONT,
-    text_position=(0, (matrixportal.graphics.display.height // 2) -1), 
+    text_position=(0, 3), 
     scrolling=True,
 )
 
 # Static 'Connecting' Text
 matrixportal.add_text(
     text_font=terminalio.FONT, 
-    text_position=(2, (matrixportal.graphics.discplay.height // 2) -1),
+    text_position=(0, 19),
+    scrolling=True
 )
 
 # ------------- WiFi ------------- #
@@ -100,13 +101,13 @@ def publish(client, userdata, topic, pid):
     # This method is called when the client publishes data to a feed.
     print("Published to {0} with PID {1}".format(topic, pid))
 
-# ------------- Network Connection ------------- #
+# ------------- Network Connection Function ------------- #
 def update_data():
     # Connect to WiFi
     print("Connecting to WiFi...")
     wifi.connect()
     print("Connected to WiFi!")
-    matrixportal.set_text("Conn", 1)
+    matrixportal.set_text("Connecting", 1)
  
     # Initialize MQTT interface with the esp interface
     MQTT.set_socket(socket, esp)
@@ -156,14 +157,17 @@ def update_data():
         matrixportal.set_text(text_door)
     if door_sensor.value == True:
         text_pir = str(pir_sensor.value)
-        matrixportal.set_text(text_pirr)
+        matrixportal.set_text(text_pir, 1)
     if door_sensor.value == False:
         text_pir = str(pir_sensor.value)
-        matrixportal.set_text(text_pir)
+        matrixportal.set_text(text_pir, 1)
+
+# ------------- Initialize Services ------------- #
 
 update_data()
 matrixportal.set_text(" ", 1)
 last_update = time.monotonic()
+
 # ------------- Program Loop ------------- #
 while True:
     while time.monotonic() < last_update + PUBLISH_DELAY:
