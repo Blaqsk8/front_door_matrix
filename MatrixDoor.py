@@ -101,11 +101,12 @@ def publish(client, userdata, topic, pid):
     print("Published to {0} with PID {1}".format(topic, pid))
 
 # ------------- Network Connection ------------- #
-def wifi_connect():
+def update_data():
     # Connect to WiFi
     print("Connecting to WiFi...")
     wifi.connect()
     print("Connected to WiFi!")
+    matrixportal.set_text("Conn", 1)
  
     # Initialize MQTT interface with the esp interface
     MQTT.set_socket(socket, esp)
@@ -137,7 +138,6 @@ def wifi_connect():
     client.subscribe(mqtt_switch)
     client.subscribe(mqtt_PIR)
     
-def publish_feed():
     temp_f = (temp_sensor.temperature * 1.8) + 32
     humidity = temp_sensor.relative_humidty)
     print(temp_f)
@@ -148,14 +148,24 @@ def publish_feed():
     client.publish(mqtt_witch1, door_sensor.value)
     print(pir_sensor.value)
     client.publish(mqtt_PIR, pir_sensor.value)
-    
-def fill_matrix():
-    
-    
+    if door_sensor.value == True:
+        text_door = str(door_sensor.value)
+        matrixportal.set_text(text_door)
+    if door_sensor.value == False:
+        text_door = str(door_sensor.value)
+        matrixportal.set_text(text_door)
+    if door_sensor.value == True:
+        text_pir = str(pir_sensor.value)
+        matrixportal.set_text(text_pirr)
+    if door_sensor.value == False:
+        text_pir = str(pir_sensor.value)
+        matrixportal.set_text(text_pir)
 
+update_data()
+matrixportal.set_text(" ", 1)
+last_update = time.monotonic()
 # ------------- Program Loop ------------- #
 while True:
-    last_update = time.monotonic()
     while time.monotonic() < last_update + PUBLISH_DELAY:
-        wifi_connect()
-        publish_feed()
+        update_data()
+        last_update = time.monotonic()
