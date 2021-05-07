@@ -29,7 +29,7 @@ matrixportal = Matrixportal(status_neopixel=board.NEOPIXEL, debug=True)
 # First Text Line
 matrixportal.add_text(
     text_font=terminalio.FONT,
-    text_position=(0, 3), 
+    text_position=(0, 5), 
     scrolling=True,
 )
 
@@ -144,26 +144,37 @@ def update_data():
     
     temp_f = (temp_sensor.temperature * 1.8) + 32
     humidity = temp_sensor.relative_humidty)
-    print(temp_f)
+    
     client.publish(mqtt_temperature, temp_f)
-    print(humidity)
     client.publish(mqtt_humidity, humidity)
-    print(door_sensor.value)
-    client.publish(mqtt_witch1, door_sensor.value)
-    print(pir_sensor.value)
+    client.publish(mqtt_switch1, door_sensor.value)
     client.publish(mqtt_PIR, pir_sensor.value)
-    if door_sensor.value == True:
+    print("Temp %f F, Humidity %f, Door open? %s, Movement? %s"
+          % (temp_f, humidity, door_sensor.value, pir_sensor.value)
+          
+    # If statements to determine what is displayed for each state
+    if door_sensor.value == True and pir_sensor == True:
         text_door = str(door_sensor.value)
+        text_pir = str(pir_sensor.value)
         matrixportal.set_text(text_door)
-    if door_sensor.value == False:
+        matrixportal.set_text(text_pir, 1)
+    if door_sensor.value == True and pir_sensor == False:
         text_door = str(door_sensor.value)
+        text_pir = str(pir_sensor.value)
         matrixportal.set_text(text_door)
-    if door_sensor.value == True:
-        text_pir = str(pir_sensor.value)
         matrixportal.set_text(text_pir, 1)
-    if door_sensor.value == False:
+    if door_sensor.value == False and pir_sensor == True:
+        text_door = str(door_sensor.value)
         text_pir = str(pir_sensor.value)
+        matrixportal.set_text(text_door)
         matrixportal.set_text(text_pir, 1)
+    if door_sensor.value == False and pir_sensor == False:
+        text_door = str(door_sensor.value)
+        text_pir = str(pir_sensor.value)
+        matrixportal.set_text(text_door)
+        matrixportal.set_text(text_pir, 1)
+
+    # Scroll the text that has been set by the methods listed above
     matrixportal.scroll_text(SCROLL_DELAY)
 
 # ------------- Initialize Services ------------- #
