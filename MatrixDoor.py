@@ -21,16 +21,19 @@ import adafruit_matrixportal.matrixportal import MatrixPortal
 
 # ------------- Display ------------- #
 
+SCROLL_DELAY = 0.02
+
 matrixportal = Matrixportal(status_neopixel=board.NEOPIXEL, debug=True)
 
 # Create a new label with the color and text selected
+# First Text Line
 matrixportal.add_text(
     text_font=terminalio.FONT,
     text_position=(0, 3), 
     scrolling=True,
 )
 
-# Static 'Connecting' Text
+# Second Text Line
 matrixportal.add_text(
     text_font=terminalio.FONT, 
     text_position=(0, 19),
@@ -161,6 +164,7 @@ def update_data():
     if door_sensor.value == False:
         text_pir = str(pir_sensor.value)
         matrixportal.set_text(text_pir, 1)
+    matrixportal.scroll_text(SCROLL_DELAY)
 
 # ------------- Initialize Services ------------- #
 
