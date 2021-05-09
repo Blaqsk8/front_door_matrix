@@ -1,0 +1,10 @@
+logins:
+  - username: metro
+    password: 2002NiM2597
+anonymous: true
+customize:
+  active: false
+  folder: mosquitto
+certfile: fullchain.pem
+keyfile: privkey.pem
+require_certificate: false
