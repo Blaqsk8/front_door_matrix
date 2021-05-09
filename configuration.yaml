@@ -1,35 +1,45 @@
-# Configue a default setup of Home Assistant (frontend, api, ets.)
 
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Text to speech
 tts:
   - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
 
 sensor:
   - platform: mqtt
     name: "Temperature"
     state_topic: "door/temperature"
     unit_of_measurement: '°F'
-    value_template: "{{ value_json.temperature }}"
   - platform: mqtt
     name: "Humidity"
-    state_topic: "door/humidty"
+    state_topic: "door/humidity"
     unit_of_measurement: '%'
-    value_template: "{{ value_json.humidity }}"
  
 binary_sensor:
   - platform: mqtt
-    name: Movment
+    name: Movement
     state_topic: "door/pir"
-    value_template: "{{ value_json.pir }}"
-    payload_on: "1"
-    payload_off: "0"
- 
-switch:
+    payload_on: "True"
+    payload_off: "False"
   - platform: mqtt
     name: Door
-    command_topic: "door/switch1"
     state_topic: "door/switch1"
-    value_template: "{{ value_json.door }}"
-    payload_on: "1"
-    payload_off: "0"
-    state_on: "1"
-    state_off: "0"
+    payload_on: "True"
+    payload_off: "False"
+
+stream:
+camera:
+  - platform: mjpeg
+    name: Driveway
+    still_image_url: "http://192.168.1.6/picture/1/current/"
+    mjpeg_url: "http://192.168.1.6:8081"
+  - platform: mjpeg
+    name: Front_Yard
+    still_image_url: "http://192.168.1.7/picture/1/current/"
+    mjpeg_url: "http://192.168.1.7:8081"
